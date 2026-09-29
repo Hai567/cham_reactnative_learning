@@ -1,11 +1,11 @@
 // Constants
 const MAX_VIDEO_DURATION_SECONDS = 30;
-export const SUPPORTED_MIME_TYPES = ["video/mp4", "video/quicktime"];
+const SUPPORTED_MIME_TYPES = ["video/mp4", "video/quicktime"];
 
 // Types
 type UploadStatus = "local" | "uploading" | "uploaded" | "failed";
 
-type VideoValidationError =
+export type VideoValidationError =
 	| "INVALID_DURATION"
 	| "VIDEO_TOO_LONG"
 	| "INVALID_FILE_SIZE"
@@ -22,6 +22,14 @@ export interface VideoAsset {
 	fileSizeBytes: number;
 	mimeType: string;
 	uploadStatus: UploadStatus;
+}
+
+// Photo
+export interface PhotoAsset {
+	id: string;
+	uri: string;
+	width: number;
+	height: number;
 }
 
 // Validation

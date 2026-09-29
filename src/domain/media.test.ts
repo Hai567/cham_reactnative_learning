@@ -4,7 +4,7 @@ import {
 	type VideoAsset,
 } from "./media";
 
-function makeVideo(overrides: Partial<VideoAsset> = {}): VideoAsset {
+export function makeVideo(overrides: Partial<VideoAsset> = {}): VideoAsset {
 	return {
 		id: "1",
 		uri: "link",
