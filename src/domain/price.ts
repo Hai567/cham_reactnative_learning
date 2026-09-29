@@ -6,7 +6,7 @@ type PriceValidationResult =
 // Validation
 export function validatePrice(price: number): PriceValidationResult {
 	if (price < 0) return { ok: false, error: "NEGATIVE_PRICE" };
-	else if (!Number.isInteger(price))
+	if (!Number.isInteger(price))
 		return { ok: false, error: "NON_INTEGER_PRICE" };
-	else return { ok: true };
+	return { ok: true };
 }

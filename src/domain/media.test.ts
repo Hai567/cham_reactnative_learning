@@ -1,6 +1,6 @@
 import {
+	isVideoReadyForCheckout,
 	validateVideo,
-	validateVideoReadyForCheckout,
 	type VideoAsset,
 } from "./media";
 
@@ -33,7 +33,7 @@ describe("validateVideo", () => {
 			ok: true,
 		});
 	});
-	it("31 sec duration", () => {
+	it("deny > 30s video", () => {
 		expect(validateVideo(makeVideo({ durationSeconds: 31 }))).toEqual({
 			ok: false,
 			error: "VIDEO_TOO_LONG",
@@ -51,13 +51,21 @@ describe("validateVideo", () => {
 			error: "UNSUPPORTED_MIME_TYPE",
 		});
 	});
+});
+
+describe("isVideoReadyForCheckout", () => {
 	it("ready to checkout", () => {
-		expect(validateVideoReadyForCheckout(makeVideo())).toBe(true);
+		expect(isVideoReadyForCheckout(makeVideo())).toBe(true);
 	});
 	it("not ready to checkout", () => {
 		expect(
-			validateVideoReadyForCheckout(
-				makeVideo({ uploadStatus: "uploading" }),
+			isVideoReadyForCheckout(makeVideo({ uploadStatus: "uploading" })),
+		).toBe(false);
+	});
+	it("uploaded video but invalid", () => {
+		expect(
+			isVideoReadyForCheckout(
+				makeVideo({ durationSeconds: -1, uploadStatus: "uploaded" }),
 			),
 		).toBe(false);
 	});
