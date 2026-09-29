@@ -1,59 +1,40 @@
-import { PhotoAsset } from "./media";
-import { makeVideo } from "./media.test";
+import {
+	makeCancelledProject,
+	makeDraftProject,
+	makeMediaReadyProject,
+	makePhoto,
+	makeVideo,
+} from "./common_test_func";
 import {
 	CancelledProject,
-	MemoryProject,
 	cancelProject,
 	getProjectLabel,
 	markMediaReady,
 } from "./project";
 
-function makeProject(rest: Partial<MemoryProject> = {}): MemoryProject {
-	return {
-		id: "1",
-		status: "draft",
-		...rest,
-	};
-}
-
-function makePhoto(overrides: Partial<PhotoAsset> = {}): PhotoAsset {
-	return {
-		id: "1",
-		uri: "link",
-		width: 1280,
-		height: 980,
-		...overrides,
-	};
-}
-
 describe("getProjectLabel", () => {
 	it("get draft project", () => {
-		expect(getProjectLabel(makeProject())).toBe("Draft");
+		expect(getProjectLabel(makeDraftProject())).toBe("Draft");
 	});
 	it("get media ready project", () => {
-		const mediaReadyProject = makeProject({
-			status: "media_ready",
-			photo: makePhoto(),
-			video: makeVideo(),
-		});
+		const mediaReadyProject = makeMediaReadyProject();
 		expect(getProjectLabel(mediaReadyProject)).toBe(
 			`Media ready with ${mediaReadyProject.video.durationSeconds}`,
 		);
 	});
 	it("get cancelled project", () => {
 		const now = new Date(Date.now());
-		const cancelledProject = makeProject({
-			status: "cancelled",
-			cancelledAt: now,
-			reason: "Don't like it",
-		});
+		const cancelledProject = makeCancelledProject(now);
 		expect(getProjectLabel(cancelledProject)).toBe(
 			`Cancelled because ${cancelledProject.reason}`,
 		);
 	});
+});
+
+describe("markMediaReady", () => {
 	it("draft missing photo", () => {
 		const video = makeVideo();
-		const prj = makeProject({ video: video });
+		const prj = makeDraftProject({ video });
 		expect(markMediaReady(prj)).toEqual({
 			ok: false,
 			error: "MISSING_PHOTO",
@@ -61,7 +42,7 @@ describe("getProjectLabel", () => {
 	});
 	it("draft missing video", () => {
 		const photo = makePhoto();
-		const prj = makeProject({ photo: photo });
+		const prj = makeDraftProject({ photo });
 		expect(markMediaReady(prj)).toEqual({
 			ok: false,
 			error: "MISSING_VIDEO",
@@ -70,7 +51,7 @@ describe("getProjectLabel", () => {
 	it("draft video too long", () => {
 		const photo = makePhoto();
 		const video = makeVideo({ durationSeconds: 31 });
-		const prj = makeProject({ photo: photo, video: video });
+		const prj = makeDraftProject({ photo, video: video });
 		expect(markMediaReady(prj)).toEqual({
 			ok: false,
 			error: "VIDEO_TOO_LONG",
@@ -79,7 +60,7 @@ describe("getProjectLabel", () => {
 	it("draft video not uploaded", () => {
 		const photo = makePhoto();
 		const video = makeVideo({ uploadStatus: "local" });
-		const prj = makeProject({ photo: photo, video: video });
+		const prj = makeDraftProject({ photo, video: video });
 		expect(markMediaReady(prj)).toEqual({
 			ok: false,
 			error: "VIDEO_NOT_UPLOADED",
@@ -88,8 +69,8 @@ describe("getProjectLabel", () => {
 	it("correct media_ready draft", () => {
 		const photo = makePhoto();
 		const video = makeVideo({ uploadStatus: "uploaded" });
-		const prj = makeProject({
-			photo: photo,
+		const prj = makeDraftProject({
+			photo,
 			video: video,
 		});
 		const targetPrj = {
@@ -104,23 +85,25 @@ describe("getProjectLabel", () => {
 	it("Project gốc không bị thay đổi sau khi chuyển", () => {
 		const photo = makePhoto();
 		const video = makeVideo({ uploadStatus: "uploaded" });
-		const prj = makeProject({
-			status: "media_ready",
-			photo: photo,
-			video: video,
-		});
-		expect(markMediaReady(prj).status).not.toBe(prj.status);
+		const prj = makeDraftProject({ photo, video });
+
+		const results = markMediaReady(prj);
+		if (!results.ok) throw new Error("Expected success");
+		expect(results.project.status).not.toBe(prj.status);
 	});
+});
+
+describe("cancelProject", () => {
 	it("Successfully cancel draft", () => {
 		const photo = makePhoto();
 		const video = makeVideo({ uploadStatus: "uploaded" });
-		const prj = makeProject({
-			status: "media_ready",
+		const prj = makeDraftProject({
 			photo: photo,
 			video: video,
 		});
 		const now = new Date(Date.now());
 		const cancelReason = "I don't like it";
+
 		const expected: CancelledProject = {
 			status: "cancelled",
 			id: prj.id,
@@ -133,16 +116,10 @@ describe("getProjectLabel", () => {
 		});
 	});
 	it("Can't cancel already cancelled draft", () => {
-		const photo = makePhoto();
-		const video = makeVideo({ uploadStatus: "uploaded" });
-		const prj = makeProject({
-			status: "media_ready",
-			photo: photo,
-			video: video,
-		});
 		const now = new Date(Date.now());
 		const cancelReason = "I don't like it";
-		const cancelledPrj = cancelProject(prj, cancelReason, now).project;
+		const cancelledPrj = makeCancelledProject(now);
+
 		expect(cancelProject(cancelledPrj, cancelReason, now)).toEqual({
 			ok: false,
 			error: "ALREADY_CANCELLED",
@@ -151,8 +128,7 @@ describe("getProjectLabel", () => {
 	it("Can't cancel project with empty reason", () => {
 		const photo = makePhoto();
 		const video = makeVideo({ uploadStatus: "uploaded" });
-		const prj = makeProject({
-			status: "media_ready",
+		const prj = makeDraftProject({
 			photo: photo,
 			video: video,
 		});

@@ -1,20 +1,6 @@
-import {
-	isVideoReadyForCheckout,
-	validateVideo,
-	type VideoAsset,
-} from "./media";
+import { isVideoReadyForCheckout, validateVideo } from "./media";
 
-export function makeVideo(overrides: Partial<VideoAsset> = {}): VideoAsset {
-	return {
-		id: "1",
-		uri: "link",
-		durationSeconds: 20,
-		fileSizeBytes: 20_000,
-		mimeType: "video/mp4",
-		uploadStatus: "uploaded",
-		...overrides,
-	};
-}
+import { makeVideo } from "./common_test_func";
 
 describe("validateVideo", () => {
 	it("valid", () => {

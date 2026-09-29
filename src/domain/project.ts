@@ -6,14 +6,14 @@ import {
 } from "./media";
 
 // Types
-interface DraftProject {
+export interface DraftProject {
 	status: "draft";
 	id: string;
 	photo?: PhotoAsset;
 	video?: VideoAsset;
 }
 
-interface MediaReadyProject {
+export interface MediaReadyProject {
 	status: "media_ready";
 	id: string;
 	photo: PhotoAsset;
@@ -40,11 +40,17 @@ type MarkMediaReadyResult =
 				| VideoValidationError;
 	  };
 
+type CancelProjectError = "EMPTY_REASON" | "ALREADY_CANCELLED";
+
+type CsancelProjectResult =
+	| { ok: true; project: CancelledProject }
+	| { ok: false; error: CancelProjectError };
+
 function assertNever(value: never): never {
 	throw new Error(`State not processed: ${JSON.stringify(value)}`);
 }
 
-export function getProjectLabel(project: MemoryProject) {
+export function getProjectLabel(project: MemoryProject): string {
 	switch (project.status) {
 		case "draft":
 			return "Draft";
@@ -53,7 +59,7 @@ export function getProjectLabel(project: MemoryProject) {
 		case "cancelled":
 			return `Cancelled because ${project.reason}`;
 		default:
-			assertNever(project);
+			return assertNever(project);
 	}
 }
 
@@ -80,7 +86,7 @@ export function cancelProject(
 	project: MemoryProject,
 	reason: string,
 	now: Date,
-) {
+): CsancelProjectResult {
 	if (project.status === "cancelled")
 		return { ok: false, error: "ALREADY_CANCELLED" };
 	if (reason.trim() === "") return { ok: false, error: "EMPTY_REASON" };
