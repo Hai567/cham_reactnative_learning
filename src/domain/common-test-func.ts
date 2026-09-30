@@ -1,5 +1,9 @@
 import { PhotoAsset, VideoAsset } from "./media";
-import { CancelledProject, DraftProject, MediaReadyProject } from "./project";
+import type {
+	CancelledProject,
+	DraftProject,
+	MediaReadyProject,
+} from "./project";
 
 export function makePhoto(overrides: Partial<PhotoAsset> = {}): PhotoAsset {
 	return {

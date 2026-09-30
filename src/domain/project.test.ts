@@ -4,7 +4,7 @@ import {
 	makeMediaReadyProject,
 	makePhoto,
 	makeVideo,
-} from "./common_test_func";
+} from "./common-test-func";
 import {
 	CancelledProject,
 	cancelProject,
@@ -70,13 +70,13 @@ describe("markMediaReady", () => {
 		const photo = makePhoto();
 		const video = makeVideo({ uploadStatus: "uploaded" });
 		const prj = makeDraftProject({
-			photo,
+			photo: photo,
 			video: video,
 		});
-		const targetPrj = {
+		const targetPrj = makeMediaReadyProject({
 			...prj,
 			status: "media_ready",
-		};
+		});
 		expect(markMediaReady(prj)).toEqual({
 			ok: true,
 			project: targetPrj,
@@ -86,10 +86,10 @@ describe("markMediaReady", () => {
 		const photo = makePhoto();
 		const video = makeVideo({ uploadStatus: "uploaded" });
 		const prj = makeDraftProject({ photo, video });
+		const snapshot = structuredClone(prj);
 
-		const results = markMediaReady(prj);
-		if (!results.ok) throw new Error("Expected success");
-		expect(results.project.status).not.toBe(prj.status);
+		markMediaReady(prj);
+		expect(prj).toEqual(snapshot);
 	});
 });
 

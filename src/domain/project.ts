@@ -1,9 +1,6 @@
-import {
-	PhotoAsset,
-	validateVideo,
-	VideoAsset,
-	VideoValidationError,
-} from "./media";
+import type { PhotoAsset, VideoAsset, VideoValidationError } from "./media";
+
+import { validateVideo } from "./media";
 
 // Types
 export interface DraftProject {
@@ -42,7 +39,7 @@ type MarkMediaReadyResult =
 
 type CancelProjectError = "EMPTY_REASON" | "ALREADY_CANCELLED";
 
-type CsancelProjectResult =
+type cancelProjectResult =
 	| { ok: true; project: CancelledProject }
 	| { ok: false; error: CancelProjectError };
 
@@ -70,7 +67,7 @@ export function markMediaReady(project: DraftProject): MarkMediaReadyResult {
 	const results = validateVideo(project.video);
 
 	if (results.ok === false) return results;
-	if (project.video.uploadStatus != "uploaded")
+	if (project.video.uploadStatus !== "uploaded")
 		return { ok: false, error: "VIDEO_NOT_UPLOADED" };
 
 	const readyProject: MediaReadyProject = {
@@ -86,7 +83,7 @@ export function cancelProject(
 	project: MemoryProject,
 	reason: string,
 	now: Date,
-): CsancelProjectResult {
+): cancelProjectResult {
 	if (project.status === "cancelled")
 		return { ok: false, error: "ALREADY_CANCELLED" };
 	if (reason.trim() === "") return { ok: false, error: "EMPTY_REASON" };
