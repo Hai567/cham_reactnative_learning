@@ -19,6 +19,7 @@ export default function HomeScreen() {
 				<Text>Chạm vào ảnh, sống lại khoảnh khắc</Text>
 				{frameColors.map((color) => (
 					<FrameColorOption
+						key={color}
 						color={color}
 						selected={color === "walnut"}
 						onPress={() => console.log(color)}
