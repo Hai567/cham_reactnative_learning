@@ -25,4 +25,10 @@ describe("validateMessage", () => {
 			message: "a".repeat(120),
 		});
 	});
+	it("xin chào", () => {
+		expect(validateMessage("  xin chào  ")).toEqual({
+			ok: true,
+			message: "xin chào",
+		});
+	});
 });

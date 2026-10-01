@@ -64,12 +64,12 @@ export default function HomeScreen() {
 							maxLength={MAX_MESSAGE_LENGTH}
 							placeholder="Viết vài dòng cho người nhận..."
 							placeholderTextColor={colors.inkMuted}
+							style={styles.input}
 						></TextInput>
-						<Text>{message.length}/120</Text>
+						<Text style={styles.counter}>
+							{message.length}/{MAX_MESSAGE_LENGTH}
+						</Text>
 					</View>
-					<Text>
-						Đã chọn: {FRAME_COLOR_INFO[selectedColor].label}
-					</Text>
 				</View>
 				<View style={styles.section}>
 					<Text style={styles.sectionTitle}>Xem trước</Text>
@@ -89,15 +89,18 @@ export default function HomeScreen() {
 								</Text>
 							</View>
 						</View>
-						<Text style={styles.previewPlaceholder}>{message}</Text>
+						{message.trim().length > 0 ? (
+							<Text style={styles.previewMessage}>{message}</Text>
+						) : (
+							<Text style={styles.previewPlaceholder}>
+								Lời nhắn sẽ hiện ở đây
+							</Text>
+						)}
 					</View>
-					<Text>
-						Đã chọn: {FRAME_COLOR_INFO[selectedColor].label}
-					</Text>
 				</View>
 				<View style={styles.section}>
 					<Text style={styles.sectionTitle}>Dự án của bạn</Text>
-					<View>
+					<View style={styles.projectList}>
 						{sampleProjects.map((prj) => (
 							<ProjectCard
 								key={prj.id}

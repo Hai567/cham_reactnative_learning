@@ -12,6 +12,7 @@ type MessageValidationResult =
 
 export function validateMessage(message: string): MessageValidationResult {
 	const mes = message.trim();
-	if (mes.length > 120) return { ok: false, error: "MESSAGE_TOO_LONG" };
+	if (mes.length > MAX_MESSAGE_LENGTH)
+		return { ok: false, error: "MESSAGE_TOO_LONG" };
 	return { ok: true, message: mes };
 }
