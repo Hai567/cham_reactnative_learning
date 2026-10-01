@@ -14,6 +14,7 @@ module.exports = defineConfig([
 			"react/self-closing-comp": "error",
 			"no-console": "warn",
 			eqeqeq: "error",
+			"prefer-const": "error",
 		},
 	},
 	{

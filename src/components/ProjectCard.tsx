@@ -1,22 +1,29 @@
 import { getProjectLabel, type MemoryProject } from "@/domain/project";
 import { colors, radius, spacing } from "@/theme/tokens";
-import { StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 
 type ProjectCardProps = {
 	project: MemoryProject;
+	onPress: () => void;
 };
 
-export function ProjectCard({ project }: ProjectCardProps) {
+export function ProjectCard({ project, onPress }: ProjectCardProps) {
 	return (
-		<View style={styles.card}>
-			<Text style={styles.id}>#{project.id}</Text>
-			<Text style={styles.label}>{getProjectLabel(project)}</Text>
-			{project.status === "cancelled" && (
-				<Text style={styles.muted}>
-					Cancelled on {project.cancelledAt.toLocaleString("vi-VN")}
-				</Text>
-			)}
-		</View>
+		<Pressable
+			onPress={onPress}
+			style={({ pressed }) => [pressed && { opacity: 0.8 }]}
+		>
+			<View style={styles.card}>
+				<Text style={styles.id}>#{project.id}</Text>
+				<Text style={styles.label}>{getProjectLabel(project)}</Text>
+				{project.status === "cancelled" && (
+					<Text style={styles.muted}>
+						Cancelled on{" "}
+						{project.cancelledAt.toLocaleString("vi-VN")}
+					</Text>
+				)}
+			</View>
+		</Pressable>
 	);
 }
 
