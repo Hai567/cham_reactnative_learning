@@ -18,11 +18,7 @@ export function FrameColorOption({
 			accessibilityRole="button"
 			accessibilityState={{ selected }}
 			onPress={onPress}
-			style={({ pressed }) => [
-				styles.option,
-				pressed && styles.pressed,
-				selected && styles.ringSelected,
-			]}
+			style={({ pressed }) => [styles.option, pressed && styles.pressed]}
 		>
 			<View style={[styles.ring, selected && styles.ringSelected]}>
 				<View
@@ -33,7 +29,7 @@ export function FrameColorOption({
 				></View>
 			</View>
 			<Text style={[styles.label, selected && styles.labelSelected]}>
-				{color}
+				{FRAME_COLOR_INFO[color].label}
 			</Text>
 		</Pressable>
 	);
