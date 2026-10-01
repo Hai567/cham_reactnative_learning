@@ -39,7 +39,7 @@ type MarkMediaReadyResult =
 
 type CancelProjectError = "EMPTY_REASON" | "ALREADY_CANCELLED";
 
-type cancelProjectResult =
+type CancelProjectResult =
 	| { ok: true; project: CancelledProject }
 	| { ok: false; error: CancelProjectError };
 
@@ -83,7 +83,7 @@ export function cancelProject(
 	project: MemoryProject,
 	reason: string,
 	now: Date,
-): cancelProjectResult {
+): CancelProjectResult {
 	if (project.status === "cancelled")
 		return { ok: false, error: "ALREADY_CANCELLED" };
 	if (reason.trim() === "") return { ok: false, error: "EMPTY_REASON" };

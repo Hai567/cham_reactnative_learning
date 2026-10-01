@@ -1,6 +1,11 @@
 // Types
-export type FrameColor = "walnut" | "natural" | "white" | "black";
-export const frameColors = ["walnut", "natural", "white", "black"] as const;
+export const FRAME_COLORS = ["walnut", "natural", "white", "black"] as const;
+export type FrameColor = (typeof FRAME_COLORS)[number];
+
+interface FrameColorInfo {
+	label: string;
+	hex: string;
+}
 
 export interface FrameProduct {
 	id: string;
@@ -12,16 +17,9 @@ export interface FrameProduct {
 	isActive: boolean;
 }
 
-export const FRAME_COLOR_LABELS: Record<FrameColor, string> = {
-	walnut: "Gỗ óc chó",
-	natural: "Gỗ tự nhiên",
-	white: "Trắng",
-	black: "Đen",
-};
-
-export const FRAME_COLOR_HEX: Record<FrameColor, string> = {
-	walnut: "#Dontknow",
-	natural: "#Dontknow",
-	white: "#Dontknow",
-	black: "#Dontknow",
+export const FRAME_COLOR_INFO: Record<FrameColor, FrameColorInfo> = {
+	walnut: { label: "Gỗ óc chó", hex: "#5A3E2B" },
+	natural: { label: "Gỗ tự nhiên", hex: "#C9A57A" },
+	white: { label: "Trắng", hex: "#F4F1EC" },
+	black: { label: "Đen", hex: "#23201E" },
 };

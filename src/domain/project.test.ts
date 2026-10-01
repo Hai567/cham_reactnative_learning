@@ -23,7 +23,7 @@ describe("getProjectLabel", () => {
 		);
 	});
 	it("get cancelled project", () => {
-		const now = new Date(Date.now());
+		const now = new Date("2026-10-01T08:51:00.000Z");
 		const cancelledProject = makeCancelledProject(now);
 		expect(getProjectLabel(cancelledProject)).toBe(
 			`Cancelled because ${cancelledProject.reason}`,
@@ -101,7 +101,7 @@ describe("cancelProject", () => {
 			photo: photo,
 			video: video,
 		});
-		const now = new Date(Date.now());
+		const now = new Date("2026-10-01T08:51:00.000Z");
 		const cancelReason = "I don't like it";
 
 		const expected: CancelledProject = {
@@ -116,7 +116,7 @@ describe("cancelProject", () => {
 		});
 	});
 	it("Can't cancel already cancelled draft", () => {
-		const now = new Date(Date.now());
+		const now = new Date("2026-10-01T08:51:00.000Z");
 		const cancelReason = "I don't like it";
 		const cancelledPrj = makeCancelledProject(now);
 
@@ -132,7 +132,7 @@ describe("cancelProject", () => {
 			photo: photo,
 			video: video,
 		});
-		const now = new Date(Date.now());
+		const now = new Date("2026-10-01T08:51:00.000Z");
 		const cancelReason = "   ";
 		expect(cancelProject(prj, cancelReason, now)).toEqual({
 			ok: false,
