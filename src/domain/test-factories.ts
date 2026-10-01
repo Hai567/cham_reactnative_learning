@@ -1,4 +1,4 @@
-import { PhotoAsset, VideoAsset } from "./media";
+import type { PhotoAsset, VideoAsset } from "./media";
 import type {
 	CancelledProject,
 	DraftProject,

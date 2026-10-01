@@ -1,4 +1,5 @@
-import { FRAME_COLOR_INFO, FrameColor } from "@/domain/frame";
+import type { FrameColor } from "@/domain/frame";
+import { FRAME_COLOR_INFO } from "@/domain/frame";
 import { colors, radius, spacing } from "@/theme/tokens";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
@@ -26,7 +27,7 @@ export function FrameColorOption({
 						styles.swatch,
 						{ backgroundColor: FRAME_COLOR_INFO[color].hex },
 					]}
-				></View>
+				/>
 			</View>
 			<Text style={[styles.label, selected && styles.labelSelected]}>
 				{FRAME_COLOR_INFO[color].label}

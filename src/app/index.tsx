@@ -1,6 +1,7 @@
-import { FRAME_COLOR_INFO, FRAME_COLORS, FrameColor } from "@/domain/frame";
-import { MAX_MESSAGE_LENGTH } from "@/domain/message";
-import { MemoryProject } from "@/domain/project";
+import type { FrameColor } from "@/domain/frame";
+import { FRAME_COLOR_INFO, FRAME_COLORS } from "@/domain/frame";
+import { MAX_MESSAGE_LENGTH, validateMessage } from "@/domain/message";
+import type { MemoryProject } from "@/domain/project";
 import { colors, radius, spacing } from "@/theme/tokens";
 import { useState } from "react";
 
@@ -9,14 +10,29 @@ import { ProjectCard } from "@/components/ProjectCard";
 import { ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-import { makePhoto, makeVideo } from "@/domain/common-test-func";
-
 const sampleProjects: MemoryProject[] = [
 	{
 		id: "1",
 		status: "draft",
 	},
-	{ id: "2", status: "media_ready", photo: makePhoto(), video: makeVideo() },
+	{
+		id: "2",
+		status: "media_ready",
+		photo: {
+			id: "1",
+			uri: "link",
+			width: 1280,
+			height: 980,
+		},
+		video: {
+			id: "1",
+			uri: "link",
+			durationSeconds: 20,
+			fileSizeBytes: 20_000,
+			mimeType: "video/mp4",
+			uploadStatus: "uploaded",
+		},
+	},
 	{
 		id: "3",
 		status: "cancelled",
@@ -26,7 +42,6 @@ const sampleProjects: MemoryProject[] = [
 ];
 
 export default function HomeScreen() {
-	console.log("render");
 	const [selectedColor, setSelectedColor] = useState<FrameColor>("walnut");
 	const [message, setMessage] = useState<string>("");
 	return (
@@ -47,10 +62,10 @@ export default function HomeScreen() {
 								color={color}
 								selected={color === selectedColor}
 								onPress={() => setSelectedColor(color)}
-							></FrameColorOption>
+							/>
 						))}
 					</View>
-					<Text>
+					<Text style={styles.selectedLabel}>
 						Đã chọn: {FRAME_COLOR_INFO[selectedColor].label}
 					</Text>
 				</View>
@@ -59,13 +74,18 @@ export default function HomeScreen() {
 					<View>
 						<TextInput
 							value={message}
-							onChangeText={(v) => setMessage(v)}
+							onChangeText={(v) => {
+								let results = validateMessage(v);
+								if (results.ok)
+									return setMessage(results.message);
+								return setMessage(results.error);
+							}}
 							multiline
 							maxLength={MAX_MESSAGE_LENGTH}
 							placeholder="Viết vài dòng cho người nhận..."
 							placeholderTextColor={colors.inkMuted}
 							style={styles.input}
-						></TextInput>
+						/>
 						<Text style={styles.counter}>
 							{message.length}/{MAX_MESSAGE_LENGTH}
 						</Text>
@@ -89,8 +109,8 @@ export default function HomeScreen() {
 								</Text>
 							</View>
 						</View>
-						{message.trim().length > 0 ? (
-							<Text style={styles.previewMessage}>{message}</Text>
+						{validateMessage(message).ok ? (
+							<Text style={styles.previewMessage}>{}</Text>
 						) : (
 							<Text style={styles.previewPlaceholder}>
 								Lời nhắn sẽ hiện ở đây
@@ -102,10 +122,7 @@ export default function HomeScreen() {
 					<Text style={styles.sectionTitle}>Dự án của bạn</Text>
 					<View style={styles.projectList}>
 						{sampleProjects.map((prj) => (
-							<ProjectCard
-								key={prj.id}
-								project={prj}
-							></ProjectCard>
+							<ProjectCard key={prj.id} project={prj} />
 						))}
 					</View>
 				</View>

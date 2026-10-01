@@ -7,7 +7,6 @@ type ProjectCardProps = {
 };
 
 export function ProjectCard({ project }: ProjectCardProps) {
-	console.log("card", project.id);
 	return (
 		<View style={styles.card}>
 			<Text style={styles.id}>#{project.id}</Text>

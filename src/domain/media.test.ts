@@ -1,6 +1,6 @@
 import { isVideoReadyForCheckout, validateVideo } from "./media";
 
-import { makeVideo } from "./common-test-func";
+import { makeVideo } from "./test-factories";
 
 describe("validateVideo", () => {
 	it("valid", () => {

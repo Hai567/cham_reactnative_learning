@@ -1,16 +1,12 @@
+import type { CancelledProject } from "./project";
+import { cancelProject, getProjectLabel, markMediaReady } from "./project";
 import {
 	makeCancelledProject,
 	makeDraftProject,
 	makeMediaReadyProject,
 	makePhoto,
 	makeVideo,
-} from "./common-test-func";
-import {
-	CancelledProject,
-	cancelProject,
-	getProjectLabel,
-	markMediaReady,
-} from "./project";
+} from "./test-factories";
 
 describe("getProjectLabel", () => {
 	it("get draft project", () => {
