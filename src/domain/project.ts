@@ -43,7 +43,7 @@ type CancelProjectResult =
 	| { ok: true; project: CancelledProject }
 	| { ok: false; error: CancelProjectError };
 
-function assertNever(value: never): never {
+export function assertNever(value: never): never {
 	throw new Error(`State not processed: ${JSON.stringify(value)}`);
 }
 

@@ -6,10 +6,14 @@ import { ProjectCard } from "@/components/ProjectCard";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+import { useDraft } from "@/state/DraftContext";
 import { useRouter } from "expo-router";
+
+import { hasDraftChanged } from "@/state/draft";
 
 export default function HomeScreen() {
 	const router = useRouter();
+	const { draft, dispatch } = useDraft();
 
 	return (
 		<SafeAreaView style={styles.safeArea}>
@@ -19,10 +23,22 @@ export default function HomeScreen() {
 					<Text style={styles.tagline}>
 						Chạm vào ảnh, sống lại khoảnh khắc
 					</Text>
-					<PrimaryButton
-						label="Tạo kỷ niệm mới"
-						onPress={() => router.push("/create")}
-					/>
+					{hasDraftChanged(draft) ? (
+						<>
+							<Text style={styles.tagline}>
+								Bạn có một kỷ niệm đang làm dở
+							</Text>
+							<PrimaryButton
+								label="Tiếp tục bản nháp"
+								onPress={() => router.push("/create")}
+							/>
+						</>
+					) : (
+						<PrimaryButton
+							label="Tạo kỷ niệm mới"
+							onPress={() => router.push("/create")}
+						/>
+					)}
 				</View>
 				<View style={styles.section}>
 					<Text style={styles.sectionTitle}>Dự án của bạn</Text>

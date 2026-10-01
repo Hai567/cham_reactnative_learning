@@ -11,7 +11,7 @@ export function ProjectCard({ project, onPress }: ProjectCardProps) {
 	return (
 		<Pressable
 			onPress={onPress}
-			style={({ pressed }) => [pressed && { opacity: 0.8 }]}
+			style={({ pressed }) => [pressed && styles.pressed]}
 		>
 			<View style={styles.card}>
 				<Text style={styles.id}>#{project.id}</Text>
@@ -39,4 +39,5 @@ const styles = StyleSheet.create({
 	id: { fontSize: 12, color: colors.inkMuted },
 	label: { fontSize: 16, color: colors.ink },
 	muted: { fontSize: 14, color: colors.inkMuted },
+	pressed: { opacity: 0.7 },
 });

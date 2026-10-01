@@ -3,14 +3,14 @@ import { FRAME_COLOR_INFO, FRAME_COLORS } from "@/domain/frame";
 import { MAX_MESSAGE_LENGTH } from "@/domain/message";
 import { colors, radius, spacing } from "@/theme/tokens";
 
-import type { FrameColor } from "@/domain/frame";
-import { useState } from "react";
+import { PrimaryButton } from "@/components/PrimaryButton";
+import { useDraft } from "@/state/DraftContext";
 import { ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 
 export default function CreateScreen() {
-	const [selectedColor, setSelectedColor] = useState<FrameColor>("walnut");
-	const [message, setMessage] = useState<string>("");
-	const trimmedMessage = message.trim();
+	const { draft, dispatch } = useDraft();
+
+	const trimmedMessage = draft.message.trim();
 	return (
 		<ScrollView contentContainerStyle={styles.content}>
 			<View style={styles.section}>
@@ -20,21 +20,28 @@ export default function CreateScreen() {
 						<FrameColorOption
 							key={color}
 							color={color}
-							selected={color === selectedColor}
-							onPress={() => setSelectedColor(color)}
+							selected={color === draft.frameColor}
+							onPress={() =>
+								dispatch({
+									type: "color_selected",
+									color: color,
+								})
+							}
 						/>
 					))}
 				</View>
 				<Text style={styles.selectedLabel}>
-					Đã chọn: {FRAME_COLOR_INFO[selectedColor].label}
+					Đã chọn: {FRAME_COLOR_INFO[draft.frameColor].label}
 				</Text>
 			</View>
 			<View style={styles.section}>
 				<Text style={styles.sectionTitle}>Lời nhắn</Text>
 				<View>
 					<TextInput
-						value={message}
-						onChangeText={(v) => setMessage(v)}
+						value={draft.message}
+						onChangeText={(v) =>
+							dispatch({ type: "message_changed", message: v })
+						}
 						multiline
 						maxLength={MAX_MESSAGE_LENGTH}
 						placeholder="Viết vài dòng cho người nhận..."
@@ -42,7 +49,7 @@ export default function CreateScreen() {
 						style={styles.input}
 					/>
 					<Text style={styles.counter}>
-						{message.length}/{MAX_MESSAGE_LENGTH}
+						{draft.message.length}/{MAX_MESSAGE_LENGTH}
 					</Text>
 				</View>
 			</View>
@@ -54,7 +61,7 @@ export default function CreateScreen() {
 							styles.previewFrame,
 							{
 								backgroundColor:
-									FRAME_COLOR_INFO[selectedColor].hex,
+									FRAME_COLOR_INFO[draft.frameColor].hex,
 							},
 						]}
 					>
@@ -74,6 +81,12 @@ export default function CreateScreen() {
 						</Text>
 					)}
 				</View>
+			</View>
+			<View style={styles.section}>
+				<PrimaryButton
+					label="Bắt đầu lại"
+					onPress={() => dispatch({ type: "reset" })}
+				/>
 			</View>
 		</ScrollView>
 	);
