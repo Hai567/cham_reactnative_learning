@@ -13,7 +13,7 @@ import { hasDraftChanged } from "@/state/draft";
 
 export default function HomeScreen() {
 	const router = useRouter();
-	const { draft, dispatch } = useDraft();
+	const { draft } = useDraft();
 
 	return (
 		<SafeAreaView style={styles.safeArea}>

@@ -1,4 +1,4 @@
-import { spacing } from "@/theme/tokens";
+import { colors, spacing } from "@/theme/tokens";
 
 import { PrimaryButton } from "@/components/PrimaryButton";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
@@ -20,6 +20,7 @@ function ProjectStatusDetails({ prj }: { prj: MemoryProject }) {
 			return (
 				<View>
 					<Text>Video {prj.video.durationSeconds}s</Text>
+					<Text>Photo {prj.photo.uri}s</Text>
 				</View>
 			);
 		case "cancelled":
@@ -36,21 +37,21 @@ function ProjectStatusDetails({ prj }: { prj: MemoryProject }) {
 
 export default function ProjectDetailScreen() {
 	const id = useLocalSearchParams<{ id: string }>().id;
-	const prj = findSampleProject("id");
+	const prj = findSampleProject(id);
 	const router = useRouter();
 
 	if (prj) {
 		return (
 			<ScrollView contentContainerStyle={styles.content}>
+				<Text style={styles.sectionTitle}>{getProjectLabel(prj)}</Text>
 				<Text>{id}</Text>
-				<Text>{getProjectLabel(prj)}</Text>
 				<ProjectStatusDetails prj={prj} />
 			</ScrollView>
 		);
 	}
 	return (
 		<ScrollView contentContainerStyle={styles.content}>
-			<Text>Không tìm thấy dự án này</Text>
+			<Text style={styles.sectionTitle}>Không tìm thấy dự án này</Text>
 			<PrimaryButton
 				label="Về trang chủ"
 				onPress={() =>
@@ -63,4 +64,11 @@ export default function ProjectDetailScreen() {
 
 const styles = StyleSheet.create({
 	content: { padding: spacing.lg, gap: spacing.xl },
+	sectionTitle: {
+		fontSize: 20,
+		lineHeight: 28,
+		fontWeight: "600",
+		color: colors.ink,
+	},
+	selectedLabel: { fontSize: 14, color: colors.inkMuted },
 });

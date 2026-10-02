@@ -1,4 +1,4 @@
-import type { DraftAction } from "./draft";
+import type { DraftAction, DraftState } from "./draft";
 import { draftReducer, hasDraftChanged, initDraftState } from "./draft";
 
 describe("draftReducer", () => {
@@ -20,8 +20,12 @@ describe("draftReducer", () => {
 		});
 	});
 	it("reset state", () => {
+		const changedState: DraftState = {
+			frameColor: "black",
+			message: "HelloWorld",
+		};
 		const action: DraftAction = { type: "reset" };
-		expect(draftReducer(initDraftState, action)).toEqual(initDraftState);
+		expect(draftReducer(changedState, action)).toEqual(initDraftState);
 	});
 	it("doesn't change the input state", () => {
 		const action: DraftAction = {
