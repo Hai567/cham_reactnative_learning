@@ -5,15 +5,32 @@ import { colors, radius, spacing } from "@/theme/tokens";
 
 import { PrimaryButton } from "@/components/PrimaryButton";
 import { useDraft } from "@/state/DraftContext";
+import { useEffect, useState } from "react";
 import { ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 
 export default function CreateScreen() {
 	const { draft, dispatch } = useDraft();
+	const [savedAt, setSavedAt] = useState<Date | null>(null);
+
+	useEffect(() => {
+		const timer = setTimeout(() => setSavedAt(new Date()), 800);
+
+		return () => clearTimeout(timer);
+	}, [draft]);
 
 	const trimmedMessage = draft.message.trim();
+
 	return (
 		<ScrollView contentContainerStyle={styles.content}>
 			<View style={styles.section}>
+				<Text style={styles.savedHint}>
+					Đã lưu nháp lúc{" "}
+					{savedAt?.toLocaleTimeString("vi-VN", {
+						hour: "2-digit",
+						minute: "2-digit",
+						second: "2-digit",
+					})}
+				</Text>
 				<Text style={styles.sectionTitle}>Chọn màu khung</Text>
 				<View style={styles.colorRow}>
 					{FRAME_COLORS.map((color) => (
@@ -140,4 +157,5 @@ const styles = StyleSheet.create({
 		color: colors.ink,
 	},
 	previewPlaceholder: { color: colors.inkMuted },
+	savedHint: { fontSize: 12, color: colors.inkMuted, textAlign: "center" },
 });

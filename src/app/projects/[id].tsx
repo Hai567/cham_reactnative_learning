@@ -13,21 +13,34 @@ function ProjectStatusDetails({ prj }: { prj: MemoryProject }) {
 		case "draft":
 			return (
 				<View>
-					<Text>{prj.photo ? "Đã có ảnh" : "Chưa có ảnh"}</Text>
+					<Text style={styles.selectedLabel}>
+						{prj.photo ? "Đã có ảnh" : "Chưa có ảnh"}
+					</Text>
+					<Text style={styles.selectedLabel}>
+						{prj.video ? "Đã có video" : "Chưa có video"}
+					</Text>
 				</View>
 			);
 		case "media_ready":
 			return (
 				<View>
-					<Text>Video {prj.video.durationSeconds}s</Text>
-					<Text>Photo {prj.photo.uri}s</Text>
+					<Text style={styles.selectedLabel}>
+						Video {prj.video.durationSeconds}s
+					</Text>
+					<Text style={styles.selectedLabel}>
+						Ảnh {prj.photo.width}×{prj.photo.height}
+					</Text>
 				</View>
 			);
 		case "cancelled":
 			return (
 				<View>
-					<Text>Lý do hủy: {prj.reason}</Text>
-					<Text>At: {prj.cancelledAt.toLocaleString("vi-VN")}</Text>
+					<Text style={styles.selectedLabel}>
+						Lý do hủy: {prj.reason}
+					</Text>
+					<Text style={styles.selectedLabel}>
+						At: {prj.cancelledAt.toLocaleString("vi-VN")}
+					</Text>
 				</View>
 			);
 		default:
